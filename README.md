@@ -2,7 +2,7 @@
 
 > Automatically fill teacher evaluation surveys on [etlab.in](https://etlab.in) — any college, any department, any semester.
 
-One script. Paste it in the browser console on an etlab survey page. All 11 questions answered and submitted in under 5 seconds.
+One script. Paste it in the browser console on an etlab survey page. All questions answered and submitted in under 3 seconds.
 
 ---
 
