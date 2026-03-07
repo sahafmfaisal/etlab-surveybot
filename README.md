@@ -36,7 +36,8 @@ For every subject after the first: go back to the survey list, click the next su
 | 10 | Sincerity of the teacher | Sincere |
 | 11 | Overall teaching effectiveness | Excellent |
 
-All answers are customizable via the website before copying.
+All answers are customisable via the website before copying.
+
 ---
 
 ## Using on mobile
@@ -78,10 +79,17 @@ The script is fully readable above — no minification, no obfuscation. Read it 
 
 ```
 etlab-surveybot/
-├── index.html    — page structure
-├── style.css     — all styles, fully responsive
-├── script.js     — UI logic + the survey filler script
-└── README.md
+├── index.html          
+├── style.css           
+├── script.js           
+├── counter-worker.js   
+├── wrangler.toml       
+├── README.md           
+├── favicon.png         
+├── .gitignore          
+├── CNAME               
+└── LICENSE    
+         
 ```
 
 No build step. No npm. Open `index.html` in a browser and it works.

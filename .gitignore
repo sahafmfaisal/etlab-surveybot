@@ -1,0 +1,19 @@
+# Wrangler
+.wrangler/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Screenshots (don't need these in the repo)
+Screenshot 2026-03-07 144528.png
+Screenshot from 2026-03-07 01-26-21.png

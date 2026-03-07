@@ -13,10 +13,8 @@ const QUESTION_OPTIONS = [
   { key: 'overall',             label: '11. Overall teaching effectiveness',        options: ['Excellent','Good','Fair','Poor'],           default: 'Excellent'  },
 ];
 
-/* ── COUNTER CONFIG ── */
-const COUNTER_NS   = 'surveybot-sahaf';
-const COUNTER_KEY  = 'surveys-completed';
-const COUNTER_SEED = 20;
+
+const COUNTER_URL = 'https://surveybot-counter.sahafmfaisal076.workers.dev';
 
 /* ── CURRENT ANSWER STATE ── */
 let currentAnswers = {};
@@ -221,19 +219,32 @@ function resetAnswers() {
   renderAnswerKey();
 }
 
+/* ══════════════════════════════════════
+   COUNTER — Cloudflare Worker backed
+   ─────────────────────────────────────
+   On page load  → fetch(COUNTER_URL + '/get')
+                   Worker reads current value from KV,
+                   returns JSON { value: N }.
+                   We animate the number up from 0.
 
+   On copy click → fetch(COUNTER_URL + '/hit')
+                   Worker atomically increments the KV
+                   value by 1 and returns the new total.
+                   We animate to the new value so the
+                   counter ticks up live on every copy.
+══════════════════════════════════════ */
 function loadCounter() {
-  fetch(`https://api.countapi.xyz/get/${COUNTER_NS}/${COUNTER_KEY}`)
+  fetch(`${COUNTER_URL}/get`)
     .then(r => r.json())
-    .then(data => animateCounter((data.value || 0) + COUNTER_SEED))
-    .catch(() => animateCounter(COUNTER_SEED)); // graceful fallback if API is down
+    .then(data => animateCounter(data.value || 0))
+    .catch(() => animateCounter(480)); // static fallback if worker is unreachable
 }
 
 function incrementCounter() {
-  fetch(`https://api.countapi.xyz/hit/${COUNTER_NS}/${COUNTER_KEY}`)
+  fetch(`${COUNTER_URL}/hit`)
     .then(r => r.json())
-    .then(data => animateCounter((data.value || 0) + COUNTER_SEED))
-    .catch(() => {}); // silent fail — don't break the copy flow
+    .then(data => animateCounter(data.value || 0))
+    .catch(() => {}); // silent fail — never break the copy flow
 }
 
 function animateCounter(target) {

@@ -1,0 +1,8 @@
+name       = "surveybot-counter"
+main       = "counter-worker.js"
+compatibility_date = "2024-01-01"
+
+
+[[kv_namespaces]]
+binding = "COUNTER"
+id      = "f4e1be7bb76c4f6f93d4098ee0bcae8c"
