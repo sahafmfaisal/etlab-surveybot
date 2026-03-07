@@ -183,6 +183,16 @@ body {
   flex-wrap: wrap; margin-bottom: 48px;
 }
 
+/* ── PRODUCT HUNT BADGES ── */
+.hero-ph-badge { display: inline-flex; align-items: center; }
+.hero-ph-badge img { display: block; border-radius: 6px; transition: opacity .15s; }
+.hero-ph-badge:hover img { opacity: .85; }
+.nav-link-ph {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--s2); border: 1px solid var(--b2); color: var(--t2);
+}
+.nav-link-ph:hover { border-color: #da552f; color: #da552f; background: rgba(218,85,47,.12); }
+
 /* ── BUTTONS ── */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 8px;

@@ -4,6 +4,10 @@
 
 One script. Paste it in the browser console on an etlab survey page. All questions answered and submitted in under 3 seconds.
 
+[![SurveyBot on Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1091907&theme=dark&t=1772875883066)](https://www.producthunt.com/products/surveybot-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-surveybot-2)
+
+![alt text](<Screenshot 2026-03-07 144528.png>)
+![alt text](<Screenshot from 2026-03-07 01-26-21.png>)
 ---
 
 ## How it works
