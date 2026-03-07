@@ -20,114 +20,6 @@ For every subject after the first: go back to the survey list, click the next su
 
 ---
 
-## The Script
-
-```js
-(function(){
-  var M = {
-    'knowledge':           'Excellent',
-    'clarity':             'Excellent',
-    'willingness':         'Excellent',
-    'percentage of class': '< 10%',
-    'dictates':            'No',
-    'organis':             'Excellent',
-    'speed':               'Just Right',
-    'encourage':           'Yes',
-    'behavior':            'Pleasant',
-    'sincerity':           'Sincere',
-    'overall':             'Excellent'
-  };
-
-  function getLabel(radio) {
-    var s = radio.nextSibling;
-    while (s) {
-      if (s.nodeType === 3 && s.textContent.trim()) return s.textContent.trim();
-      if (s.nodeType === 1 && s.tagName !== 'BR' && s.tagName !== 'INPUT') return s.innerText.trim();
-      s = s.nextSibling;
-    }
-    return radio.value || '';
-  }
-
-  function getQuestion(radio) {
-    var el = radio, answerDiv = null;
-    for (var i = 0; i < 6; i++) {
-      el = el.parentElement; if (!el) break;
-      if ((el.className || '').toLowerCase().indexOf('answer') !== -1) { answerDiv = el; break; }
-    }
-    if (answerDiv) {
-      var sib = answerDiv.previousSibling;
-      while (sib) {
-        var txt = (sib.textContent || sib.nodeValue || '').trim();
-        if (txt.length > 3 && /\d+\./.test(txt)) return txt.toLowerCase();
-        sib = sib.previousSibling;
-      }
-      var parent = answerDiv.parentElement;
-      if (parent) {
-        var kids = parent.childNodes;
-        for (var j = 0; j < kids.length; j++) {
-          if (kids[j] === answerDiv) break;
-          var kt = (kids[j].textContent || kids[j].nodeValue || '').trim();
-          if (kt.length > 3 && /\d+\./.test(kt)) return kt.toLowerCase();
-        }
-      }
-    }
-    el = radio;
-    for (var k = 0; k < 10; k++) {
-      el = el.parentElement; if (!el) break;
-      var direct = '';
-      el.childNodes.forEach(function(n){ if (n.nodeType === 3) direct += n.textContent; });
-      direct = direct.trim();
-      if (direct.length > 5 && /\d+\./.test(direct)) return direct.toLowerCase();
-    }
-    return '';
-  }
-
-  var G = {}, order = [];
-  [].forEach.call(document.querySelectorAll('input[type=radio]'), function(r) {
-    var k = r.name || ('_' + r.id);
-    if (!G[k]) { G[k] = []; order.push(k); }
-    G[k].push(r);
-  });
-
-  var n = 0, done = {};
-  order.forEach(function(nm) {
-    if (done[nm]) return;
-    var rs = G[nm], q = getQuestion(rs[0]), labels = rs.map(getLabel);
-    var mkey = Object.keys(M).find(function(k){ return q.indexOf(k) !== -1; });
-    if (mkey) {
-      var target = M[mkey];
-      rs.forEach(function(r, i){
-        if (labels[i] === target && !r.checked) {
-          r.click(); r.checked = true;
-          r.dispatchEvent(new Event('change', { bubbles: true }));
-          n++; done[nm] = 1;
-        }
-      });
-    } else {
-      if (!rs[0].checked) {
-        rs[0].click(); rs[0].checked = true;
-        rs[0].dispatchEvent(new Event('change', { bubbles: true }));
-        n++; done[nm] = 1;
-      }
-    }
-  });
-
-  var sub = [].find.call(
-    document.querySelectorAll('input[type=submit], button[type=submit], .btn-success, button, a.btn'),
-    function(b){ return /submit/i.test(b.innerText || b.value || b.textContent || ''); }
-  );
-  if (sub) {
-    if (confirm('SurveyBot: ' + n + '/' + order.length + ' answers filled.' + String.fromCharCode(10) + 'OK = submit | Cancel = review first'))
-      sub.click();
-  } else {
-    alert('SurveyBot: ' + n + ' answers filled. Click Submit Answers.');
-  }
-  console.log('%cSurveyBot: ' + n + '/' + order.length + ' done', 'color:#10b981;font-weight:bold;font-size:13px');
-})();
-```
-
----
-
 ## Answer key
 
 | # | Question | Answer selected |
@@ -144,6 +36,7 @@ For every subject after the first: go back to the survey list, click the next su
 | 10 | Sincerity of the teacher | Sincere |
 | 11 | Overall teaching effectiveness | Excellent |
 
+All answers are customizable via the website before copying.
 ---
 
 ## Using on mobile
@@ -159,7 +52,7 @@ Enable Developer Options on your phone → turn on USB Debugging → connect to 
 **iPhone / iOS**
 Settings → Safari → Advanced → Web Inspector. Connect to a Mac via USB. Open Safari on Mac → Develop menu → your device → inspect the page.
 
-If none of these work, just use a laptop — the whole thing takes under 2 minutes.
+If none of these work, just use a laptop — the whole thing takes under 3 minutes.
 
 ---
 

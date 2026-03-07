@@ -1,63 +1,63 @@
-const SURVEY_SCRIPT = `(function(){
-  /* ── Answer map: question keyword → best answer ── */
+/* ── QUESTION DEFINITIONS ── */
+const QUESTION_OPTIONS = [
+  { key: 'knowledge',           label: '1. Knowledge of the Teacher',              options: ['Excellent','Good','Fair','Poor'],            default: 'Excellent'  },
+  { key: 'clarity',             label: '2. Clarity & Understandability',            options: ['Excellent','Good','Fair','Poor'],            default: 'Excellent'  },
+  { key: 'willingness',         label: '3. Willingness to help',                    options: ['Excellent','Good','Fair','Poor'],            default: 'Excellent'  },
+  { key: 'percentage of class', label: '4. Percentage of class not engaged',        options: ['< 10%','10% - 25%','> 25%'],                default: '< 10%'      },
+  { key: 'dictates',            label: '5. Whether the teacher dictates notes',     options: ['No','Yes'],                                 default: 'No'         },
+  { key: 'organis',             label: '6. Ability to organise lectures',           options: ['Excellent','Satisfactory','Inadequate'],    default: 'Excellent'  },
+  { key: 'speed',               label: '7. Speed of presentation',                  options: ['Just Right','Too Fast','Too Slow'],         default: 'Just Right' },
+  { key: 'encourage',           label: '8. Does the teacher encourage questioning', options: ['Yes','Sometimes','No'],                     default: 'Yes'        },
+  { key: 'behavior',            label: '9. Behavior of the teacher',                options: ['Pleasant','Indifferent','Unpleasant'],      default: 'Pleasant'   },
+  { key: 'sincerity',           label: '10. Sincerity of the teacher',              options: ['Sincere','Not Sincere','Unable to judge'],  default: 'Sincere'    },
+  { key: 'overall',             label: '11. Overall teaching effectiveness',        options: ['Excellent','Good','Fair','Poor'],           default: 'Excellent'  },
+];
+
+/* ── COUNTER CONFIG ── */
+const COUNTER_NS   = 'surveybot-sahaf';
+const COUNTER_KEY  = 'surveys-completed';
+const COUNTER_SEED = 20;
+
+/* ── CURRENT ANSWER STATE ── */
+let currentAnswers = {};
+
+/* ══════════════════════════════════════
+   BUILD SCRIPT FROM CURRENT ANSWERS
+══════════════════════════════════════ */
+function buildSurveyScript() {
+  const mapLines = QUESTION_OPTIONS
+    .map(q => `    '${q.key}': '${currentAnswers[q.key] || q.default}'`)
+    .join(',\n');
+
+  return `(function(){
   var M = {
-    'knowledge':           'Excellent',
-    'clarity':             'Excellent',
-    'willingness':         'Excellent',
-    'percentage of class': '< 10%',
-    'dictates':            'No',
-    'organis':             'Excellent',
-    'speed':               'Just Right',
-    'encourage':           'Yes',
-    'behavior':            'Pleasant',
-    'sincerity':           'Sincere',
-    'overall':             'Excellent'
+${mapLines}
   };
 
-  /* ── Get label text from a radio ──
-     etlab: <input type="radio" name="Option[4]" value="12"> Excellent <br>
-     The label is a raw TEXT NODE (type 3) right after the input. */
   function getLabel(radio) {
     var s = radio.nextSibling;
     while (s) {
-      if (s.nodeType === 3 && s.textContent.trim()) {
-        return s.textContent.trim();
-      }
-      if (s.nodeType === 1 && s.tagName !== 'BR' && s.tagName !== 'INPUT') {
-        return s.innerText.trim();
-      }
+      if (s.nodeType === 3 && s.textContent.trim()) return s.textContent.trim();
+      if (s.nodeType === 1 && s.tagName !== 'BR' && s.tagName !== 'INPUT') return s.innerText.trim();
       s = s.nextSibling;
     }
     return radio.value || '';
   }
 
-  /* ── Get question text for a radio group ──
-     The radio lives inside <div class="answer">.
-     The question text is a SIBLING of .answer, not inside it.
-     Walk up to the .answer container, then check preceding siblings. */
   function getQuestion(radio) {
-    var el = radio;
-    var answerDiv = null;
-
+    var el = radio, answerDiv = null;
     for (var i = 0; i < 6; i++) {
       el = el.parentElement;
       if (!el) break;
-      var cls = (el.className || '').toLowerCase();
-      if (cls.indexOf('answer') !== -1 || cls.indexOf('option') !== -1) {
-        answerDiv = el;
-        break;
-      }
+      if ((el.className || '').toLowerCase().indexOf('answer') !== -1) { answerDiv = el; break; }
     }
-
     if (answerDiv) {
-      /* Check previous siblings of the .answer div */
       var sib = answerDiv.previousSibling;
       while (sib) {
         var txt = (sib.textContent || sib.nodeValue || '').trim();
         if (txt.length > 3 && /\\d+\\./.test(txt)) return txt.toLowerCase();
         sib = sib.previousSibling;
       }
-      /* Check parent's children before answerDiv */
       var parent = answerDiv.parentElement;
       if (parent) {
         var kids = parent.childNodes;
@@ -68,23 +68,18 @@ const SURVEY_SCRIPT = `(function(){
         }
       }
     }
-
-    /* Fallback: walk ancestors, read direct text nodes only */
     el = radio;
     for (var k = 0; k < 10; k++) {
       el = el.parentElement;
       if (!el) break;
       var direct = '';
-      el.childNodes.forEach(function(node) {
-        if (node.nodeType === 3) direct += node.textContent;
-      });
+      el.childNodes.forEach(function(node) { if (node.nodeType === 3) direct += node.textContent; });
       direct = direct.trim();
       if (direct.length > 5 && /\\d+\\./.test(direct)) return direct.toLowerCase();
     }
     return '';
   }
 
-  /* ── Group radios by name ── */
   var G = {}, order = [];
   [].forEach.call(document.querySelectorAll('input[type=radio]'), function(r) {
     var k = r.name || ('_' + r.id);
@@ -93,15 +88,10 @@ const SURVEY_SCRIPT = `(function(){
   });
 
   var n = 0, done = {};
-
   order.forEach(function(nm) {
     if (done[nm]) return;
-    var rs = G[nm];
-    var q = getQuestion(rs[0]);
-    var labels = rs.map(getLabel);
-
+    var rs = G[nm], q = getQuestion(rs[0]), labels = rs.map(getLabel);
     var mkey = Object.keys(M).find(function(k) { return q.indexOf(k) !== -1; });
-
     if (mkey) {
       var target = M[mkey];
       rs.forEach(function(r, i) {
@@ -112,7 +102,6 @@ const SURVEY_SCRIPT = `(function(){
         }
       });
     } else {
-      /* No question match — select first option (best answer) */
       if (!rs[0].checked) {
         rs[0].click(); rs[0].checked = true;
         rs[0].dispatchEvent(new Event('change', { bubbles: true }));
@@ -121,7 +110,6 @@ const SURVEY_SCRIPT = `(function(){
     }
   });
 
-  /* ── Find and click submit ── */
   var sub = [].find.call(
     document.querySelectorAll('input[type=submit], button[type=submit], .btn-success, button, a.btn'),
     function(b) { return /submit/i.test(b.innerText || b.value || b.textContent || ''); }
@@ -134,88 +122,168 @@ const SURVEY_SCRIPT = `(function(){
   }
   console.log('%cSurveyBot: ' + n + '/' + order.length + ' done', 'color:#10b981;font-weight:bold;font-size:13px');
 })();`;
-
-/* ── ANSWER KEY DATA ── */
-const ANSWER_KEY = [
-  { q: '1. Knowledge of the Teacher?', a: 'Excellent' },
-  { q: '2. Clarity & Understandability', a: 'Excellent' },
-  { q: '3. Willingness to help', a: 'Excellent' },
-  { q: '4. Percentage of class not engaged', a: '< 10%' },
-  { q: '5. Whether the teacher dictates notes?', a: 'No' },
-  { q: '6. Ability to organise lectures', a: 'Excellent' },
-  { q: '7. Speed of presentation', a: 'Just Right' },
-  { q: '8. Does the teacher encourage questioning?', a: 'Yes' },
-  { q: '9. Behavior of the teacher', a: 'Pleasant' },
-  { q: '10. Sincerity of the teacher', a: 'Sincere' },
-  { q: '11. Overall teaching effectiveness', a: 'Excellent' },
-];
+}
 
 /* ══════════════════════════════════════
    INIT
 ══════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
+  // Seed currentAnswers from defaults
+  QUESTION_OPTIONS.forEach(q => { currentAnswers[q.key] = q.default; });
+
   renderScript();
   renderAnswerKey();
+  renderCustomizeGrid();
   initNav();
   initSmoothLinks();
+  loadCounter();
 });
 
 /* ── Render script into <pre> ── */
 function renderScript() {
   const codeEl = document.getElementById('scriptCode');
-  const preEl = document.getElementById('scriptPre');
   const lineEl = document.getElementById('lineCount');
   if (!codeEl) return;
-
-  codeEl.textContent = SURVEY_SCRIPT;
-
-  const lines = SURVEY_SCRIPT.split('\n').length;
-  if (lineEl) lineEl.textContent = lines + ' lines';
+  const script = buildSurveyScript();
+  codeEl.textContent = script;
+  if (lineEl) lineEl.textContent = script.split('\n').length + ' lines';
 }
 
-/* ── Render answer key grid ── */
+/* ── Static answer key ── */
 function renderAnswerKey() {
   const grid = document.getElementById('akGrid');
   if (!grid) return;
-  grid.innerHTML = ANSWER_KEY.map(item => `
+  grid.innerHTML = QUESTION_OPTIONS.map(q => `
     <div class="ak-row">
-      <span class="ak-q">${item.q}</span>
-      <span class="ak-a">${item.a}</span>
+      <span class="ak-q">${q.label}</span>
+      <span class="ak-a" id="ak-val-${q.key}">${q.default}</span>
     </div>
   `).join('');
 }
 
-/* ── Copy script to clipboard ── */
+/* ── Update answer key badge when user customizes ── */
+function updateAnswerKeyBadge(key, value) {
+  const badge = document.getElementById(`ak-val-${key}`);
+  if (badge) badge.textContent = value;
+}
+
+/* ══════════════════════════════════════
+   CUSTOMIZE
+══════════════════════════════════════ */
+function renderCustomizeGrid() {
+  const grid = document.getElementById('customizeGrid');
+  if (!grid) return;
+  grid.innerHTML = QUESTION_OPTIONS.map(q => `
+    <div class="customize-row">
+      <label class="customize-label">${q.label}</label>
+      <div class="customize-options">
+        ${q.options.map(opt => `
+          <button
+            class="customize-option ${opt === q.default ? 'is-default' : ''} ${currentAnswers[q.key] === opt ? 'selected' : ''}"
+            data-key="${q.key}"
+            data-value="${opt}"
+            onclick="selectAnswer('${q.key}','${opt.replace(/'/g, "\\'")}')"
+          >${opt}</button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectAnswer(key, value) {
+  currentAnswers[key] = value;
+
+  // Update button active states
+  document.querySelectorAll(`.customize-option[data-key="${key}"]`).forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.value === value);
+  });
+
+  // Rebuild the displayed script live
+  renderScript();
+
+  // Keep the answer key in sync
+  updateAnswerKeyBadge(key, value);
+
+  // Pulse the status indicator
+  const status = document.getElementById('customizeStatus');
+  if (status) {
+    status.innerHTML = `<span class="customize-dot customize-dot-updated"></span> Script updated!`;
+    setTimeout(() => {
+      status.innerHTML = `<span class="customize-dot"></span> Script auto-updates as you change answers`;
+    }, 1800);
+  }
+}
+
+function resetAnswers() {
+  QUESTION_OPTIONS.forEach(q => { currentAnswers[q.key] = q.default; });
+  renderCustomizeGrid();
+  renderScript();
+  renderAnswerKey();
+}
+
+
+function loadCounter() {
+  fetch(`https://api.countapi.xyz/get/${COUNTER_NS}/${COUNTER_KEY}`)
+    .then(r => r.json())
+    .then(data => animateCounter((data.value || 0) + COUNTER_SEED))
+    .catch(() => animateCounter(COUNTER_SEED)); // graceful fallback if API is down
+}
+
+function incrementCounter() {
+  fetch(`https://api.countapi.xyz/hit/${COUNTER_NS}/${COUNTER_KEY}`)
+    .then(r => r.json())
+    .then(data => animateCounter((data.value || 0) + COUNTER_SEED))
+    .catch(() => {}); // silent fail — don't break the copy flow
+}
+
+function animateCounter(target) {
+  const el = document.getElementById('surveyCounter');
+  if (!el) return;
+  const duration = 1200;
+  const startTime = performance.now();
+  (function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+    el.textContent = Math.floor(ease * target).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString() + '+';
+  })(startTime);
+}
+
+/* ══════════════════════════════════════
+   COPY
+══════════════════════════════════════ */
 function copyScript() {
-  navigator.clipboard.writeText(SURVEY_SCRIPT).then(() => {
-    const btn = document.getElementById('copyBtn');
-    if (btn) {
-      btn.classList.add('copied');
-      const span = btn.querySelector('span');
-      const orig = span ? span.textContent : '';
-      if (span) span.textContent = 'Copied!';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        if (span) span.textContent = orig;
-      }, 2200);
-    }
-    showToast();
-  }).catch(() => {
-    /* Fallback for browsers without clipboard API */
+  const script = buildSurveyScript();
+  navigator.clipboard.writeText(script).then(onCopied).catch(() => {
+    // Fallback for browsers without clipboard API
     const el = document.getElementById('scriptCode');
     if (el) {
-      const range = document.createRange();
-      range.selectNodeContents(el);
+      const r = document.createRange();
+      r.selectNodeContents(el);
       window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
+      window.getSelection().addRange(r);
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      showToast();
     }
+    onCopied();
   });
 }
 
-/* ── Toast notification ── */
+function onCopied() {
+  // Button feedback
+  const btn = document.getElementById('copyBtn');
+  if (btn) {
+    btn.classList.add('copied');
+    const span = btn.querySelector('span');
+    const orig = span ? span.textContent : '';
+    if (span) span.textContent = 'Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); if (span) span.textContent = orig; }, 2200);
+  }
+  showToast();
+  incrementCounter(); // ← this is what makes the counter tick up live on copy
+}
+
 function showToast() {
   const t = document.getElementById('toast');
   if (!t) return;
@@ -223,9 +291,11 @@ function showToast() {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-/* ── Toggle answer key ── */
+/* ══════════════════════════════════════
+   ANSWER KEY TOGGLE
+══════════════════════════════════════ */
 function toggleAK() {
-  const body = document.getElementById('akBody');
+  const body   = document.getElementById('akBody');
   const toggle = document.getElementById('akToggle');
   if (!body) return;
   const open = body.classList.toggle('open');
@@ -236,19 +306,17 @@ function toggleAK() {
   }
 }
 
-/* ── Mobile nav toggle ── */
+/* ══════════════════════════════════════
+   NAV + SMOOTH SCROLL
+══════════════════════════════════════ */
 function initNav() {
   const toggle = document.getElementById('mobileNavToggle');
-  const menu = document.getElementById('mobileNavMenu');
+  const menu   = document.getElementById('mobileNavMenu');
   if (!toggle || !menu) return;
-
   toggle.addEventListener('click', () => {
     const open = menu.classList.toggle('open');
     toggle.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', open);
   });
-
-  /* Close on link click */
   menu.querySelectorAll('.nav-mobile-link').forEach(link => {
     link.addEventListener('click', () => {
       menu.classList.remove('open');
@@ -257,21 +325,20 @@ function initNav() {
   });
 }
 
-/* ── Smooth anchor scrolling with nav offset ── */
 function initSmoothLinks() {
   document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', function (e) {
+    link.addEventListener('click', function(e) {
       const id = this.getAttribute('href').slice(1);
       const target = document.getElementById(id);
       if (!target) return;
       e.preventDefault();
-      const offset = 70;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
     });
   });
 }
 
-/* ── Expose functions to HTML onclick handlers ── */
-window.copyScript = copyScript;
-window.toggleAK = toggleAK;
+/* ── Expose to HTML onclick handlers ── */
+window.copyScript   = copyScript;
+window.toggleAK     = toggleAK;
+window.selectAnswer = selectAnswer;
+window.resetAnswers = resetAnswers;

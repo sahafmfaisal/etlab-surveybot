@@ -15,29 +15,23 @@
 </head>
 
 <body>
-
-  <!-- ░░ NOISE OVERLAY ░░ -->
   <div class="noise" aria-hidden="true"></div>
-
-  <!-- ░░ GLOW ORBS ░░ -->
   <div class="orb orb-1" aria-hidden="true"></div>
   <div class="orb orb-2" aria-hidden="true"></div>
   <div class="orb orb-3" aria-hidden="true"></div>
 
   <div class="layout">
 
-    <!-- ════════════════════════════════
-         NAV
-    ════════════════════════════════ -->
+    <!-- NAV -->
     <nav class="nav">
       <div class="nav-inner">
         <a href="#" class="nav-logo">
           <span class="nav-logo-icon">⬡</span>
           <span class="nav-logo-text">SurveyBot</span>
-          <!-- span class="nav-version">v3.1</span-->
         </a>
         <div class="nav-links">
           <a href="#how" class="nav-link">How to use</a>
+          <a href="#customize" class="nav-link">Customize</a>
           <a href="#mobile" class="nav-link">Mobile</a>
           <a href="#security" class="nav-link">Security</a>
           <a href="https://www.producthunt.com/products/surveybot-2?utm_source=badge-featured&utm_medium=badge"
@@ -62,15 +56,14 @@
       </div>
       <div class="nav-mobile-menu" id="mobileNavMenu">
         <a href="#how" class="nav-mobile-link">How to use</a>
+        <a href="#customize" class="nav-mobile-link">Customize</a>
         <a href="#mobile" class="nav-mobile-link">Mobile</a>
         <a href="#security" class="nav-mobile-link">Security</a>
         <a href="#opensource" class="nav-mobile-link">GitHub</a>
       </div>
     </nav>
 
-    <!-- ════════════════════════════════
-         HERO
-    ════════════════════════════════ -->
+    <!-- HERO -->
     <section class="hero">
       <div class="hero-eyebrow">
         <span class="dot-pulse"></span>
@@ -79,21 +72,14 @@
       <h1 class="hero-title">
         Complete your<br>
         <em class="hero-title-accent">teacher surveys</em><br>
-        in seconds.
+        in 3 seconds.
       </h1>
       <p class="hero-desc">
         One script. Paste it in the browser console on any etlab teacher evaluation survey page.
         Fills all questions with the best answers and submits — automatically.
       </p>
-      <!--<div class="hero-byline">
-        <span>Built by</span>
-        <a href="https://linkedin.com/in/sahafmfaisal" target="_blank" rel="noopener" class="hero-byline-name">Sahaf M
-          Faisal</a>
-        <span class="hero-byline-dot">·</span>
-        <span>IEEE Student Branch Chair, CEV</span>
-      </div> -->
       <div class="hero-actions">
-        <button class="btn-primary" id="heroGetScript"
+        <button class="btn-primary"
           onclick="document.getElementById('scriptSection').scrollIntoView({behavior:'smooth'})">
           <span>Get the Script</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -102,9 +88,10 @@
         </button>
         <a href="#how" class="btn-ghost">See how it works</a>
         <a href="https://www.producthunt.com/products/surveybot-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-surveybot-2"
-          target="_blank" rel="noopener noreferrer" class="hero-ph-badge"><img alt="SurveyBot on Product Hunt"
-            width="200" height="43"
-            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1091907&theme=dark&t=1772875883066"></a>
+          target="_blank" rel="noopener noreferrer" class="hero-ph-badge">
+          <img alt="SurveyBot on Product Hunt" width="200" height="43"
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1091907&theme=dark&t=1772875883066">
+        </a>
       </div>
       <div class="hero-stats">
         <div class="stat"><span class="stat-n">11</span><span class="stat-l">Questions auto-filled</span></div>
@@ -113,13 +100,14 @@
         <div class="stat-divider"></div>
         <div class="stat"><span class="stat-n">0</span><span class="stat-l">Config needed</span></div>
         <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Colleges supported</span></div>
+        <div class="stat">
+          <span class="stat-n" id="surveyCounter"><span class="counter-shimmer">···</span></span>
+          <span class="stat-l">Surveys completed</span>
+        </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         HOW TO USE
-    ════════════════════════════════ -->
+    <!-- HOW TO USE -->
     <section class="section" id="how">
       <div class="section-label">How to use</div>
       <h2 class="section-title">Four steps. That's it.</h2>
@@ -128,46 +116,37 @@
           <div class="step-num">01</div>
           <div class="step-icon">🌐</div>
           <h3>Open a survey</h3>
-          <p>On etlab teacher evaluation survey page, click <strong>"Answer Questions"</strong> for any subject to open
-            the question form.</p>
+          <p>On etlab, click <strong>"Answer Questions"</strong> for any subject to open the question form.</p>
         </div>
         <div class="step-card">
           <div class="step-num">02</div>
           <div class="step-icon">🔧</div>
           <h3>Open DevTools</h3>
-          <p>Press <kbd>F12</kbd> on your keyboard, then click the <kbd>Console</kbd> tab. You'll see a
-            <code>&gt;</code> prompt.
-          </p>
+          <p>Press <kbd>F12</kbd>, then click the <kbd>Console</kbd> tab. You'll see a <code>&gt;</code> prompt.</p>
         </div>
         <div class="step-card">
           <div class="step-num">03</div>
           <div class="step-icon">📋</div>
           <h3>Paste & press Enter</h3>
-          <p>Copy the script below, paste it into the console, and hit <kbd>Enter</kbd>. Done in 3 seconds.</p>
+          <p>Copy the script below, paste into the console, hit <kbd>Enter</kbd>. Done in 3 seconds.</p>
         </div>
         <div class="step-card">
           <div class="step-num">04</div>
           <div class="step-icon">🔁</div>
           <h3>Next subject</h3>
-          <p>Go back to the list, click the next subject, then press <kbd>↑</kbd> in console to recall the script and
-            hit <kbd>Enter</kbd>.</p>
+          <p>Go back, click the next subject, press <kbd>↑</kbd> to recall, hit <kbd>Enter</kbd>.</p>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         SCRIPT
-    ════════════════════════════════ -->
+    <!-- SCRIPT -->
     <section class="section script-section" id="scriptSection">
       <div class="section-label">The Script</div>
       <h2 class="section-title">Copy once. Use for every survey.</h2>
-
       <div class="script-card" id="scriptCard">
         <div class="script-card-header">
           <div class="traffic-lights">
-            <span class="tl tl-r"></span>
-            <span class="tl tl-y"></span>
-            <span class="tl tl-g"></span>
+            <span class="tl tl-r"></span><span class="tl tl-y"></span><span class="tl tl-g"></span>
           </div>
           <span class="script-filename">etlab-surveybot.js</span>
           <div class="script-header-actions">
@@ -185,8 +164,6 @@
           <pre id="scriptPre"><code id="scriptCode"></code></pre>
         </div>
       </div>
-
-      <!-- ANSWER KEY -->
       <div class="ak-wrap">
         <button class="ak-toggle" id="akToggle" onclick="toggleAK()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -201,59 +178,89 @@
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         MOBILE
-    ════════════════════════════════ -->
+    <!-- CUSTOMIZE -->
+    <section class="section" id="customize">
+      <div class="section-label">Customize</div>
+      <h2 class="section-title">Adjust answers before copying.</h2>
+      <p class="section-desc">If you want to change or customize any answer — the script regenerates live. Perfect if you want to give honest
+        ratings.</p>
+      <div class="customize-card">
+        <div class="customize-card-header">
+          <span class="customize-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14" />
+            </svg>
+            Live Answer Map
+          </span>
+          <button class="customize-reset" onclick="resetAnswers()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            Reset defaults
+          </button>
+        </div>
+        <div class="customize-grid" id="customizeGrid"></div>
+        <div class="customize-footer">
+          <div class="customize-status" id="customizeStatus">
+            <span class="customize-dot"></span>
+            Script auto-updates as you change answers
+          </div>
+          <button class="btn-primary" onclick="copyScript()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copy Custom Script
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOBILE -->
     <section class="section" id="mobile">
       <div class="section-label">Mobile users</div>
       <h2 class="section-title">Using on your phone?</h2>
-      <p class="section-desc">The browser console isn't directly accessible on mobile browsers. Here are your options:
-      </p>
-
+      <p class="section-desc">The browser console isn't directly accessible on mobile. Here are your options:</p>
       <div class="mobile-options">
         <div class="mobile-card mobile-card-best">
           <div class="mobile-card-tag">Easiest</div>
           <div class="mobile-card-icon">🦁</div>
           <h3>Kiwi Browser (Android)</h3>
-          <p>Install <strong>Kiwi Browser</strong> from the Play Store. It's the only Android browser with full Chrome
-            DevTools support. Open etlab, paste the script exactly like on desktop.</p>
+          <p>The only Android browser with full Chrome DevTools. Install from Play Store, open etlab, paste script
+            exactly like desktop.</p>
           <a href="https://play.google.com/store/apps/details?id=com.kiwibrowser.browser" target="_blank" rel="noopener"
             class="mobile-link">Get Kiwi Browser →</a>
         </div>
         <div class="mobile-card">
           <div class="mobile-card-icon">🔗</div>
           <h3>USB Debugging (Android)</h3>
-          <p>Connect your phone to a PC via USB, enable <strong>USB Debugging</strong> in Developer Options, then open
-            <code>chrome://inspect</code> on the PC to access your phone's browser console remotely.
-          </p>
+          <p>Enable <strong>USB Debugging</strong> in Developer Options, connect to PC, open
+            <code>chrome://inspect</code> to access phone's console remotely.</p>
         </div>
         <div class="mobile-card">
           <div class="mobile-card-icon">🍎</div>
           <h3>iPhone / iOS</h3>
-          <p>Connect to a Mac via USB, enable <strong>Web Inspector</strong> in Safari settings, then use Safari on Mac
-            → Develop menu to inspect your iPhone's browser. Paste the script there.</p>
+          <p>Enable <strong>Web Inspector</strong> in Safari settings. Connect to Mac via USB. Safari → Develop menu →
+            your device.</p>
         </div>
       </div>
-
       <div class="mobile-note">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" />
           <line x1="12" y1="8" x2="12" y2="12" />
           <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
-        <p>If none of these work, just use a laptop or desktop to complete the survey — it takes under 2 minutes total.
-        </p>
+        <p>If none of these work, just use a laptop — the whole thing takes under 2 minutes.</p>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         SECURITY
-    ════════════════════════════════ -->
+    <!-- SECURITY -->
     <section class="section" id="security">
       <div class="section-label">Security & Privacy</div>
       <h2 class="section-title">Is this safe to use?</h2>
       <p class="section-desc">Completely transparent. Here's exactly what the script does — and doesn't do.</p>
-
       <div class="security-grid">
         <div class="security-card security-safe">
           <div class="security-icon">✅</div>
@@ -279,7 +286,6 @@
           </ul>
         </div>
       </div>
-
       <div class="security-verify">
         <div class="security-verify-icon">🔍</div>
         <div>
@@ -288,7 +294,6 @@
             pasting anything in a browser console, you should always read it.</p>
         </div>
       </div>
-
       <div class="security-warning">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -300,71 +305,54 @@
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         OPEN SOURCE
-    ════════════════════════════════ -->
+    <!-- OPEN SOURCE -->
     <section class="section" id="opensource">
       <div class="section-label">Contribute</div>
-      <!-- <h2 class="section-title">Free &amp; open source.</h2>
-      <p class="section-desc">No build tools, no dependencies, no framework. Three plain files. MIT licensed.</p> -->
-
       <div class="repo-strip">
         <div class="repo-strip-name">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t2)">
             <path
               d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
           </svg>
-          <span class="repo-owner">sahafmfaisal</span>
-          <span class="repo-slash">/</span>
-          <span class="repo-repo">etlab-surveybot</span>
+          <span class="repo-owner">sahafmfaisal</span><span class="repo-slash">/</span><span
+            class="repo-repo">etlab-surveybot</span>
           <span class="repo-tag">Public</span>
         </div>
         <div class="repo-actions">
           <a href="https://github.com/sahafmfaisal/etlab-surveybot/stargazers" target="_blank" rel="noopener"
-            class="repo-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            class="repo-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
               <polygon
                 points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-            Star
-          </a>
+            </svg>Star</a>
           <a href="https://github.com/sahafmfaisal/etlab-surveybot/fork" target="_blank" rel="noopener"
-            class="repo-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            class="repo-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
               <circle cx="12" cy="18" r="3" />
               <circle cx="6" cy="6" r="3" />
               <circle cx="18" cy="6" r="3" />
               <path d="M18 9v1a2 2 0 01-2 2H8a2 2 0 01-2-2V9" />
               <line x1="12" y1="12" x2="12" y2="15" />
-            </svg>
-            Fork
-          </a>
+            </svg>Fork</a>
           <a href="https://github.com/sahafmfaisal/etlab-surveybot/issues" target="_blank" rel="noopener"
-            class="repo-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            class="repo-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            Issues
-          </a>
+            </svg>Issues</a>
           <a href="https://github.com/sahafmfaisal/etlab-surveybot" target="_blank" rel="noopener"
-            class="repo-btn repo-btn-primary">
-            View on GitHub →
-          </a>
+            class="repo-btn repo-btn-primary">View on GitHub →</a>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         FOOTER
-    ════════════════════════════════ -->
+    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-inner">
         <div class="footer-brand">
           <span class="nav-logo-icon">⬡</span>
           <span>SurveyBot</span>
-          <!-- span class="footer-version">v3.1</span-->
         </div>
         <p class="footer-note">
           Not affiliated with etlab or any colleges.<br>
@@ -379,11 +367,10 @@
             target="_blank" rel="noopener noreferrer">Product Hunt</a>
           <a href="https://github.com/sahafmfaisal/etlab-surveybot" target="_blank" rel="noopener">GitHub</a>
         </div>
-        <p class="footer-copyright">&copy; 2025 SurveyBot. All rights reserved.</p>
+        <p class="footer-copyright">&copy; 2025 SurveyBot. MIT License.</p>
       </div>
     </footer>
-
-  </div><!-- /layout -->
+  </div>
 
   <div class="toast" id="toast">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
