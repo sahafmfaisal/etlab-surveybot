@@ -6,7 +6,7 @@ One script. Paste it in the browser console on an etlab survey page. All questio
 
 [![SurveyBot on Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1091907&theme=dark&t=1772875883066)](https://www.producthunt.com/products/surveybot-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-surveybot-2)
 
-<img width="1899" height="961" alt="Screenshot 2026-03-07 144528" src="https://github.com/user-attachments/assets/6c1b3bb0-e179-4750-8096-725596883dbb" />
+<img width="1834" height="959" alt="screenshot2026-03-07165410" src="https://github.com/user-attachments/assets/0a2eaf12-3883-49b0-939e-c2418341a727" />
 <img width="1852" height="962" alt="Screenshot from 2026-03-07 01-26-21" src="https://github.com/user-attachments/assets/f235b8c6-3ea3-4cd9-889a-52ac3f0b9123" />
 
 ---
